@@ -8,7 +8,7 @@
 class Game {
 
 public:
-    Game();
+    Game(Board pBoard, Board opponentsBoard);
     ~Game() = default;
     void initializer();
     void customDistribution(Board& board);
@@ -16,12 +16,14 @@ public:
     void attackEnemy(Board& boardAttacker, Board& boardAttacked);
     bool getIsEnd() {return isEnd;};
     bool getTurn() {return turn;};
+    Board getBoard() {return board;};
 
 private:
-    Board board1;
-    Board board2;
+    Board board;
+    Board opponentsBoard;
     bool turn;
     bool isEnd;
 };
+
 
 #endif //BATTLESHIPS_SEMESTRALKA_GAME_H

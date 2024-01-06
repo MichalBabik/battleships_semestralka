@@ -1,7 +1,10 @@
 #include <sstream>
 #include"Game.h"
 
-Game::Game() {
+Game::Game(Board pBoard, Board pOpponentsBoard) {
+    board = pBoard;
+    opponentsBoard = pOpponentsBoard;
+
     initializer();
 }
 
@@ -18,19 +21,17 @@ void Game::initializer() {
     }
 
     if (options == "R") {
-        board1.placeShipsRandomly();
-        board2.placeShipsRandomly();
+        board.placeShipsRandomly();
     }
     if (options =="C") {
         std::cin.ignore();
-        customDistribution(board1);
-        customDistribution(board2);
+        customDistribution(board);
     }
 }
 
-void Game::customDistribution(Board& board) {
-    for (int i = 0; i < board.getNumberOfShips(); ++i) {
-        board.getArrLenghts(i);
+void Game::customDistribution(Board& pBoard) {
+    for (int i = 0; i < pBoard.getNumberOfShips(); ++i) {
+        pBoard.getArrLenghts(i);
         bool isPlaced = false;
         while (!isPlaced) {
             std::cout << "Please select coordinates and orientation for your battleship with length " << board.getArrLenghts(i) << std::endl;
@@ -44,18 +45,19 @@ void Game::customDistribution(Board& board) {
             char orientation;
 
             if (iss >> x >> y >> orientation) {
-                Battleship ship(x, y, board.getArrLenghts(i),orientation);
-                isPlaced = board.setShip(ship);
+                Battleship ship(x, y, pBoard.getArrLenghts(i),orientation);
+                isPlaced = pBoard.setShip(ship);
             } else {
                 std::cerr << "Invalid input format!" << std::endl;
             }
         }
 
-        board.printBoard();
+        pBoard.printBoard();
     }
     std::cout << "Board successfully initialized " << std::endl;
 }
 
+/**
 void Game::startGame() {
     std::cin.ignore();
     isEnd = false;
@@ -75,7 +77,7 @@ void Game::startGame() {
             }
         }
     }
-}
+}*/
 
 void Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
     bool attacked = false;
