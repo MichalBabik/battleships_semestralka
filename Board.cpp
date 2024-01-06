@@ -8,7 +8,7 @@ Board::Board() {
             gameBoardFogOfWar[i][j] = '#';
         }
     }
-    setUsername();
+    //setUsername();
 }
 
 void Board::printBoard() {
