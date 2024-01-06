@@ -27,7 +27,7 @@ public:
     void setOpponentsBoard(Board pOpponentsBoard){opponentsBoard = pOpponentsBoard;};
 
 private:
-    const int PORT = 1995;
+    const int PORT = 1994;
     int clientSocket;
     struct sockaddr_in serverAddress;
     int yourSocket;
@@ -59,11 +59,13 @@ private:
         return std::string(ip_buffer);
     }
 
-    void sendGuessToServer(int guess);
+    void sendCoordsToServer(std::string coords);
 
     const char * trimWhitespace(char *buffer);
 
     void load();
+
+    const char *charToString(char character);
 };
 
 #endif //BATTLESHIPS_SEMESTRALKA_CLIENT_H

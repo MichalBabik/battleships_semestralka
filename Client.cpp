@@ -1,3 +1,4 @@
+#include <sstream>
 #include "Client.h"
 #include "Game.h"
 
@@ -47,10 +48,9 @@ Client::~Client() {
     close(clientSocket);
 }
 
-void Client::sendGuessToServer(int guess) {
-    std::string guessStr = std::to_string(guess);
-    send(clientSocket, guessStr.c_str(), guessStr.length(), 0);
-    std::cout << "Guess sent to server: " << guess << std::endl;
+void Client::sendCoordsToServer(std::string coords) {
+    send(clientSocket, coords.c_str(), coords.length(), 0);
+    std::cout << "Coords sent to server: " << coords << std::endl;
 }
 
 void Client::playGame() {
@@ -60,10 +60,92 @@ void Client::playGame() {
     std::cout << "Game is in progress" << std::endl;
 
     Game game(board, opponentsBoard);
+    std::cin.ignore();
+    while (true) {
+        char buffer[256];
+        int tSocket = 0;
+        memset(buffer, 0, sizeof(buffer));
+        int x = read(clientSocket, buffer, sizeof(buffer));
+        if (x < 0) {
+            error("Error reading from socket");
+        } else if (x == 0) {
+            std::cout << "Timeout occurred. No data received." << std::endl;
+        } else {
+            std::cout << "Message from server: " << buffer << std::endl;
+            tSocket = std::stoi(buffer);
+            std::cout << yourSocket << std::endl;
+            std::cout << tSocket << std::endl;
+            if (yourSocket == tSocket) {
+                std::string coords = game.attackEnemy(game.getBoard(), game.getOpponentBoard());
+                sendCoordsToServer(coords);
+                memset(buffer, 0, sizeof(buffer));
+                int  n = read(clientSocket, buffer, sizeof(buffer));
+                if (n < 0) {
+                    error("Error reading from socket");
+                } else if (n == 0) {
+                    std::cout << "Timeout occurred. No data received." << std::endl;
+                } else {
+                    std::cout << "Message from server: " << buffer << std::endl;
 
+                    if (strcmp(buffer, "V") == 0) {
+                        std::cout << "Congratulations! You won!" << std::endl;
+                        break;  // Exit the loop since the game is over
+                    } else if (strcmp(buffer, " ") == 0) {
+                        std::cout << "You hit water" << std::endl;
+                    } else if (strcmp(buffer, "X") == 0) {
+                        std::cout << "You hit enemy battleship" << std::endl;
+                    } else {
+                        std::cout << "Unexpected message received: " << buffer << std::endl;
+                    }
+                }
 
+            } else {
+                int x = 0;
+                int y = 0;
+                char r;
+
+                std::cout << "Not your turn" << std::endl;
+                memset(buffer, 0, sizeof(buffer));
+                int n = read(clientSocket, buffer, sizeof(buffer));
+
+                if (n < 0) {
+                    error("Error reading from socket");
+                } else if (n == 0) {
+                    std::cout << "Timeout occurred. No data received." << std::endl;
+                } else {
+                    std::cout << "Message from server: " << buffer << std::endl;
+                    std::istringstream iss(buffer);
+                    iss >> x >> y;
+                    r = game.getBoard().attack(x, y);
+                    if (!game.getBoard().existsShip()){
+                        send(clientSocket, charToString('V'), strlen(charToString('V')), 0);
+                        std::cout << "You lost" << std::endl;
+                        break;
+                    } else {
+                        send(clientSocket, charToString(r), strlen(charToString(r)), 0);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Client::load() {
+    char buffer[256];
+    int n = read(clientSocket, buffer, sizeof(buffer));
+    if (n < 0) {
+        error("Error reading from socket");
+    } else if (n == 0) {
+        std::cout << "Timeout occurred. No data received." << std::endl;
+    } else {
+        yourSocket = std::stoi(buffer);
+        std::cout << "You are player number: " << buffer << std::endl;
+    }
+}
 
+const char* Client::charToString(char character) {
+    char* result = new char[2];
+    result[0] = character;
+    result[1] = '\0';  // Null-terminate the string
+    return result;
 }

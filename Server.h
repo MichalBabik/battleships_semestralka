@@ -25,7 +25,7 @@ public:
     static void* startServerStatic(void* arg);  // Static function for pthread_create
 
 private:
-    const int PORT = 1995;  // Private constant variable
+    const int PORT = 1994;  // Private constant variable
     int serverSocket;
     std::vector<int> clientSockets;  // Vector to store client sockets
     socklen_t clientLength;
@@ -34,7 +34,6 @@ private:
     std::condition_variable bothConnected;  // Condition variable for synchronization
     std::mutex mutex;  // Mutex for protecting shared data
     bool clientsReady;  // Flag indicating both clients are connected
-    std::string won = "You won!";
 
     void error(const char *msg) {
         perror(msg);
@@ -78,6 +77,8 @@ private:
     void setSocketNonBlocking(int sockfd);
 
     const char *charToString(char character);
+
+    void sendCoordsToServer(std::string coords);
 };
 
 #endif // SERVER_H

@@ -102,7 +102,42 @@ void Server::handleClientCommunication() {
 
     while (true) {
         if (clientsReady) {
-
+            for (int i = 0; i < 2; ++i) {
+                int clientSocket = clientSockets[i];
+                char buffer[256];
+                sleep(2);
+                for (int j = 0; j < 2; ++j) {
+                    sendToClient(clientSockets[j], std::to_string(clientSocket).data());
+                }
+                memset(buffer, 0, sizeof(buffer));
+                int n = read(clientSocket, buffer, sizeof(buffer));
+                if (n < 0) {
+                    perror("Error reading from socket");
+                    exit(1);
+                } else if (n == 0) {
+                    std::cout << "Connection closed by the client." << std::endl;
+                    break;
+                } else {
+                    int oClientSocket;
+                    for (int otherClientSocket: clientSockets) {
+                        if (otherClientSocket != clientSocket) {
+                            sendToClient(otherClientSocket, buffer);
+                            oClientSocket = otherClientSocket;
+                        }
+                    }
+                    memset(buffer, 0, sizeof(buffer));
+                    n = read(oClientSocket, buffer, sizeof(buffer));
+                    if (n < 0) {
+                        perror("Error reading from socket");
+                        exit(1);
+                    } else if (n == 0) {
+                        std::cout << "Connection closed by the client." << std::endl;
+                        break;
+                    } else {
+                        sendToClient(clientSocket, buffer);
+                    }
+                }
+            }
         }
     }
 }

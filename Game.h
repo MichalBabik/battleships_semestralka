@@ -13,10 +13,11 @@ public:
     void initializer();
     void customDistribution(Board& board);
     void startGame();
-    void attackEnemy(Board& boardAttacker, Board& boardAttacked);
+    std::basic_string<char> attackEnemy(Board& boardAttacker, Board& boardAttacked);
     bool getIsEnd() {return isEnd;};
     bool getTurn() {return turn;};
-    Board getBoard() {return board;};
+    Board& getBoard() {return board;};
+    Board& getOpponentBoard() {return opponentsBoard;};
 
 private:
     Board board;

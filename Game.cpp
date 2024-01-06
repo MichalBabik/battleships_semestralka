@@ -23,7 +23,7 @@ void Game::initializer() {
     if (options == "R") {
         board.placeShipsRandomly();
     }
-    if (options =="C") {
+    if (options == "C") {
         std::cin.ignore();
         customDistribution(board);
     }
@@ -79,7 +79,7 @@ void Game::startGame() {
     }
 }*/
 
-void Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
+std::string Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
     bool attacked = false;
     while (!attacked) {
         boardAttacker.printBoard();
@@ -94,8 +94,11 @@ void Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
                 if (boardAttacked.getCharFromBoard(x, y) == 'O' || boardAttacked.getCharFromBoard(x, y) == '#') {
                     auto attackFunction = [&](int x, int y) { return boardAttacked.attack(x, y); };
                     boardAttacker.attackOpponent(x, y, attackFunction);
+
+                    /*turn = !turn;*/
                     attacked = true;
-                    turn = !turn;
+                    return coordinates;
+
                 } else {
                     std::cout << "You have already fired at this coordinate!" << std::endl;;
                 }
