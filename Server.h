@@ -18,14 +18,14 @@
 
 class Server {
 public:
-    Server();
+    Server(int port);
     ~Server();
 
     void startServerThread();  // Launch the server thread
     static void* startServerStatic(void* arg);  // Static function for pthread_create
 
 private:
-    const int PORT = 1994;  // Private constant variable
+    int port;  // Private constant variable
     int serverSocket;
     std::vector<int> clientSockets;  // Vector to store client sockets
     socklen_t clientLength;

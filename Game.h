@@ -8,7 +8,7 @@
 class Game {
 
 public:
-    Game(Board pBoard, Board opponentsBoard);
+    Game(Board pBoard);
     ~Game() = default;
     void initializer();
     void customDistribution(Board& board);

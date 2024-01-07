@@ -17,7 +17,7 @@
 
 class Client {
 public:
-    Client(Board board);
+    Client(Board board, int port);
     ~Client();
 
     void setSocketNonBlocking(int sockfd);
@@ -27,7 +27,7 @@ public:
     void setOpponentsBoard(Board pOpponentsBoard){opponentsBoard = pOpponentsBoard;};
 
 private:
-    const int PORT = 1994;
+    int port;
     int clientSocket;
     struct sockaddr_in serverAddress;
     int yourSocket;

@@ -3,7 +3,7 @@
 #include "Game.h"
 
 
-Server::Server() : clientsReady(false) {
+Server::Server(int port) : clientsReady(false) {
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0) {
         perror("Error opening socket");
@@ -13,7 +13,7 @@ Server::Server() : clientsReady(false) {
     bzero((char*)&serverAddress, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
-    serverAddress.sin_port = htons(PORT);
+    serverAddress.sin_port = htons(port);
 
     if (bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
         perror("Error on binding");
@@ -120,6 +120,10 @@ void Server::handleClientCommunication() {
                     int oClientSocket;
                     for (int otherClientSocket: clientSockets) {
                         if (otherClientSocket != clientSocket) {
+                            if (strcmp(buffer, "E") == 0) {
+                                //std::cout << "break" << std::endl;
+                                break;
+                            }
                             sendToClient(otherClientSocket, buffer);
                             oClientSocket = otherClientSocket;
                         }

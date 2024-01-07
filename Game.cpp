@@ -1,9 +1,8 @@
 #include <sstream>
 #include"Game.h"
 
-Game::Game(Board pBoard, Board pOpponentsBoard) {
+Game::Game(Board pBoard) {
     board = pBoard;
-    opponentsBoard = pOpponentsBoard;
 
     initializer();
 }
@@ -26,8 +25,10 @@ void Game::initializer() {
         std::cout << "Battleships randomly placed!" << std::endl;
     }
     if (options == "C") {
-        std::cin.ignore();
+        //std::cin.ignore();
         customDistribution(board);
+        system("clear");
+        std::cout << "Board successfully initialized" << std::endl;
     }
 }
 
@@ -60,7 +61,6 @@ void Game::customDistribution(Board& pBoard) {
         }
 
     }
-    std::cout << "Board successfully initialized " << std::endl;
 }
 
 std::string Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
@@ -74,7 +74,7 @@ std::string Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
         int x;
         int y;
         if (iss >> x >> y) {
-            if (x >= 0 && x < boardAttacked.getSize() && y >= 0 && y < boardAttacked.getSize() ) {
+            if (x >= 0 && x < boardAttacked.getSize() && y >= 0 && y < boardAttacked.getSize()) {
                 if (boardAttacked.getCharFromBoard(x, y) == 'O' || boardAttacked.getCharFromBoard(x, y) == '#') {
                     auto attackFunction = [&](int x, int y) { return boardAttacked.attack(x, y); };
                     boardAttacker.attackOpponent(x, y, attackFunction);
@@ -86,13 +86,17 @@ std::string Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
 
                 } else {
                     system("clear");
-                    std::cout << "You have already fired at this coordinate! (Choose different coordinates!)" << std::endl;;
+                    std::cout << "You have already fired at this coordinate! (Choose different coordinates!)"
+                              << std::endl;;
                 }
             } else {
                 system("clear");
                 std::cout << "Entered coordinates are invalid! (Choose different coordinates!)" << std::endl;;
             }
-        } else {
+        }
+            else if(coordinates == "E"){
+                return coordinates;
+            } else {
             system("clear");
             std::cerr << "Invalid input format! (Choose different coordinates!)" << std::endl;
         }
