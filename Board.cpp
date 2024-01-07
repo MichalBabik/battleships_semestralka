@@ -80,7 +80,7 @@ char Board::attack(int x, int y) {
 
 void Board::attackOpponent(int x, int y, std::function<char(int, int)> func) {
     if (x >= 0 && x < size && y < size && y >= 0) {
-        std::cout << x << " " << y << std::endl;
+        //std::cout << x << " " << y << std::endl;
         gameBoardFogOfWar[x][y] = (func)(x, y);
     } else {
         std::cout << "Wrong coordinates!" << std::endl;
