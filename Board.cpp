@@ -8,7 +8,6 @@ Board::Board() {
             gameBoardFogOfWar[i][j] = '#';
         }
     }
-    //setUsername();
 }
 
 void Board::printBoard() {
@@ -65,12 +64,12 @@ char Board::attack(int x, int y) {
         }
         if (gameBoard[x][y] == '#') {
             gameBoard[x][y] = ' ';
-            std::cout << "There is only water on this coordinate!" << std::endl;
+            std::cout << "Missile hit coordinates [" << x << "," << y << "] luckily there was only water!" << std::endl;
             return ' ';
         }
         if (gameBoard[x][y] == 'O') {
             gameBoard[x][y] = 'X';
-            std::cout << "You have hit a battleship!" << std::endl;
+            std::cout << "Battleship was hit by a missile at coordinates [" << x << "," << y << "]!" << std::endl;
             return 'X';
         }
     } else {
@@ -81,6 +80,7 @@ char Board::attack(int x, int y) {
 
 void Board::attackOpponent(int x, int y, std::function<char(int, int)> func) {
     if (x >= 0 && x < size && y < size && y >= 0) {
+        std::cout << x << " " << y << std::endl;
         gameBoardFogOfWar[x][y] = (func)(x, y);
     } else {
         std::cout << "Wrong coordinates!" << std::endl;

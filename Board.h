@@ -30,6 +30,9 @@ public:
     int getNumberOfShips() {return numberOfShips;};
     int getSize() {return size;};
     std::string getUsername() {return username;};
+    void setCoordinateInFogOfWar(int x, int y, char sign) {
+        gameBoardFogOfWar[x][y] = sign;
+    }
 
 
 private:

@@ -22,6 +22,8 @@ void Game::initializer() {
 
     if (options == "R") {
         board.placeShipsRandomly();
+        system("clear");
+        std::cout << "Battleships randomly placed!" << std::endl;
     }
     if (options == "C") {
         std::cin.ignore();
@@ -30,6 +32,8 @@ void Game::initializer() {
 }
 
 void Game::customDistribution(Board& pBoard) {
+    system("clear");
+    pBoard.printBoard();
     for (int i = 0; i < pBoard.getNumberOfShips(); ++i) {
         pBoard.getArrLenghts(i);
         bool isPlaced = false;
@@ -45,39 +49,19 @@ void Game::customDistribution(Board& pBoard) {
             char orientation;
 
             if (iss >> x >> y >> orientation) {
+                system("clear");
                 Battleship ship(x, y, pBoard.getArrLenghts(i),orientation);
                 isPlaced = pBoard.setShip(ship);
             } else {
+                system("clear");
                 std::cerr << "Invalid input format!" << std::endl;
             }
+            pBoard.printBoard();
         }
 
-        pBoard.printBoard();
     }
     std::cout << "Board successfully initialized " << std::endl;
 }
-
-/**
-void Game::startGame() {
-    std::cin.ignore();
-    isEnd = false;
-    turn = true;
-    while (!isEnd) {
-        if (turn) {
-            attackEnemy(board1, board2);
-            if (!board2.existsShip()) {
-                std::cout << board1.getUsername() << " has won!" << std::endl;
-                isEnd = true;
-            }
-        } else {
-            attackEnemy(board2, board1);
-            if (!board1.existsShip()) {
-                std::cout << board2.getUsername() << " has won!" << std::endl;
-                isEnd = true;
-            }
-        }
-    }
-}*/
 
 std::string Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
     bool attacked = false;
@@ -97,16 +81,20 @@ std::string Game::attackEnemy(Board& boardAttacker, Board& boardAttacked) {
 
                     /*turn = !turn;*/
                     attacked = true;
+
                     return coordinates;
 
                 } else {
-                    std::cout << "You have already fired at this coordinate!" << std::endl;;
+                    system("clear");
+                    std::cout << "You have already fired at this coordinate! (Choose different coordinates!)" << std::endl;;
                 }
             } else {
-                std::cout << "Entered coordinates are invalid!" << std::endl;;
+                system("clear");
+                std::cout << "Entered coordinates are invalid! (Choose different coordinates!)" << std::endl;;
             }
         } else {
-            std::cerr << "Invalid input format!" << std::endl;
+            system("clear");
+            std::cerr << "Invalid input format! (Choose different coordinates!)" << std::endl;
         }
     }
 }

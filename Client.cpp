@@ -55,9 +55,11 @@ void Client::sendCoordsToServer(std::string coords) {
 
 void Client::playGame() {
 
+    system("clear");
+    std::cout << "Clients connected, please enter inputs for game initialization!" << std::endl;
     board.setUsername();
 
-    std::cout << "Game is in progress" << std::endl;
+    //std::cout << "Game is in progress" << std::endl;
 
     Game game(board, opponentsBoard);
     std::cin.ignore();
@@ -71,27 +73,30 @@ void Client::playGame() {
         } else if (x == 0) {
             std::cout << "Timeout occurred. No data received." << std::endl;
         } else {
-            std::cout << "Message from server: " << buffer << std::endl;
+            //std::cout << "Message from server: " << buffer << std::endl;
             tSocket = std::stoi(buffer);
-            std::cout << yourSocket << std::endl;
-            std::cout << tSocket << std::endl;
+            //std::cout << yourSocket << std::endl;
+            //std::cout << tSocket << std::endl;
             if (yourSocket == tSocket) {
                 std::string coords = game.attackEnemy(game.getBoard(), game.getOpponentBoard());
                 sendCoordsToServer(coords);
                 memset(buffer, 0, sizeof(buffer));
                 int  n = read(clientSocket, buffer, sizeof(buffer));
+
+                system("clear");
+
                 if (n < 0) {
                     error("Error reading from socket");
                 } else if (n == 0) {
                     std::cout << "Timeout occurred. No data received." << std::endl;
                 } else {
-                    std::cout << "Message from server: " << buffer << std::endl;
+                    //std::cout << "Message from server: " << buffer << std::endl;
 
                     if (strcmp(buffer, "V") == 0) {
                         std::cout << "Congratulations! You won!" << std::endl;
                         break;  // Exit the loop since the game is over
                     } else if (strcmp(buffer, " ") == 0) {
-                        std::cout << "You hit water" << std::endl;
+                        std::cout << "Your missile hit water..." << std::endl;
                     } else if (strcmp(buffer, "X") == 0) {
                         std::cout << "You hit enemy battleship" << std::endl;
                     } else {
@@ -103,8 +108,8 @@ void Client::playGame() {
                 int x = 0;
                 int y = 0;
                 char r;
-
-                std::cout << "Not your turn" << std::endl;
+                game.getBoard().printBoard();
+                std::cout << "Please wait - opponent turn in progress..." << std::endl;
                 memset(buffer, 0, sizeof(buffer));
                 int n = read(clientSocket, buffer, sizeof(buffer));
 
@@ -113,7 +118,7 @@ void Client::playGame() {
                 } else if (n == 0) {
                     std::cout << "Timeout occurred. No data received." << std::endl;
                 } else {
-                    std::cout << "Message from server: " << buffer << std::endl;
+                    //std::cout << "Message from server: " << buffer << std::endl;
                     std::istringstream iss(buffer);
                     iss >> x >> y;
                     r = game.getBoard().attack(x, y);

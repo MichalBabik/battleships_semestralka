@@ -46,7 +46,6 @@ void* Server::startServerStatic(void* arg) {
 
 void Server::startServer() {
     waitForConnections();
-
 }
 
 void* Server::waitForConnectionsStatic(void* arg) {

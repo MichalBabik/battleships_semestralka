@@ -49,13 +49,10 @@ int main(int argc, char** argv) {
     Board board1;
     Board board2;
     if (choice == 1) {
-
         Server server;
         server.startServerThread();
 
-
         std::this_thread::sleep_for(std::chrono::seconds(2));
-
 
         Client client(board1);
         client.setOpponentsBoard(board2);
@@ -67,10 +64,4 @@ int main(int argc, char** argv) {
         std::cout << "Invalid choice. Exiting." << std::endl;
     }
     return 0;
-
-    /*system("clear");
-    srand(time(0));
-    Game game;
-    game.startGame();*/
-
 }
