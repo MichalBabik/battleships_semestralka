@@ -157,9 +157,8 @@ void Server::sendToClient(int clientSocket, const char* message) {
     send(clientSocket, message, strlen(message), 0);
 }
 
+
 const char* Server::charToString(char character) {
-    char* result = new char[2];
-    result[0] = character;
-    result[1] = '\0';  // Null-terminate the string
-    return result;
+    std::string result(1, character);
+    return result.c_str();
 }

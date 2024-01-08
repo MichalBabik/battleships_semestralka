@@ -13,6 +13,7 @@
 #include <vector>
 #include <condition_variable>
 #include <fcntl.h>
+#include <memory>
 
 class Server {
 public:

@@ -16,3 +16,6 @@ add_executable(battleships_semestralka main.cpp
                 Server.h)
 
 target_link_libraries(battleships_semestralka pthread)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")

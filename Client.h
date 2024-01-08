@@ -13,6 +13,7 @@
 #include <cctype>
 #include <cstring>
 #include "Board.h"
+#include <memory>
 
 class Client {
 public:
