@@ -117,6 +117,7 @@ void Board::placeShipsRandomly() {
             shipPlaced = setShip(ship);
         }
     }
+    std::cin.ignore();
 }
 
 bool Board::setShip(Battleship battleship) {

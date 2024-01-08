@@ -12,8 +12,6 @@
 #include <pthread.h>
 #include <vector>
 #include <condition_variable>
-#include <pthread.h>
-#include <cstring>
 #include <fcntl.h>
 
 class Server {
@@ -61,24 +59,14 @@ private:
     }
 
     void startServer();
-    static void* waitForConnectionsStatic(void* arg);  // Static function for pthread_create
     void waitForConnections();
-    void notifyClientsReady();  // Helper function to notify clients that both are connected
     void sendToClient(int clientSocket, const char *message);
 
     void handleClientCommunication();
 
     void *handleClientCommunicationStatic(void *arg);
 
-    int blockingRead(int sockfd, char *buffer, size_t size);
-
-    int nonBlockingRead(int sockfd, char *buffer, size_t size, int timeout_sec);
-
-    void setSocketNonBlocking(int sockfd);
-
     const char *charToString(char character);
-
-    void sendCoordsToServer(std::string coords);
 };
 
 #endif // SERVER_H

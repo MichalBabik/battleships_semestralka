@@ -59,7 +59,6 @@ void Game::customDistribution(Board& pBoard) {
             }
             pBoard.printBoard();
         }
-
     }
 }
 

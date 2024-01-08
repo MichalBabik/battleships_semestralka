@@ -6,9 +6,9 @@
 #define BATTLESHIPS_SEMESTRALKA_BOARD_H
 
 const int size = 10;
-const int numberOfShips = 2;
-//const int arrLengths[numberOfShips] = {2,3,4,5,6};
-const int arrLengths[numberOfShips] = {2, 3}; //debugging
+const int numberOfShips = 5;
+const int arrLengths[numberOfShips] = {2,3,4,5,6};
+//const int arrLengths[numberOfShips] = {2, 3}; //debugging
 
 class Board {
 

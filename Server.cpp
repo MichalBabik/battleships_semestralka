@@ -48,12 +48,6 @@ void Server::startServer() {
     waitForConnections();
 }
 
-void* Server::waitForConnectionsStatic(void* arg) {
-    Server* server = static_cast<Server*>(arg);
-    server->waitForConnections();
-    return nullptr;
-}
-
 void Server::waitForConnections() {
     int clientSocket;
     const int maxConnections = 2;
@@ -71,8 +65,6 @@ void Server::waitForConnections() {
 
         std::cout << "Connection established! Client count: " << clientSockets.size() + 1 << std::endl;
 
-        // Set the client socket to non-blocking mode
-
         clientSockets.push_back(clientSocket);
 
         // Launch a new thread to handle communication for each connected client
@@ -82,11 +74,26 @@ void Server::waitForConnections() {
             exit(1);
         }
     }
+    char buffer[256];
     sendToClient(clientSockets.at(0), "Game is ready to begin!");
     sendToClient(clientSockets.at(1), "Game is ready to begin!");
     sleep(1);
     sendToClient(clientSockets.at(0), std::to_string(clientSockets.at(0)).data());
     sendToClient(clientSockets.at(1), std::to_string(clientSockets.at(1)).data());
+    int x = read(clientSockets.at(0), buffer, sizeof(buffer));
+    if (x < 0) {
+        perror("Error reading from socket");
+        exit(1);
+    } else {
+        memset(buffer, 0, sizeof(buffer));
+        x = read(clientSockets.at(1), buffer, sizeof(buffer));
+        if (x < 0) {
+            perror("Error reading from socket");
+            exit(1);
+        }
+    }
+    sendToClient(clientSockets.at(0), charToString('R'));
+    sendToClient(clientSockets.at(1), charToString('R'));
     clientsReady = true;
 }
 
@@ -104,16 +111,16 @@ void Server::handleClientCommunication() {
             for (int i = 0; i < 2; ++i) {
                 int clientSocket = clientSockets[i];
                 char buffer[256];
-                sleep(2);
+                sleep(1);
                 for (int j = 0; j < 2; ++j) {
                     sendToClient(clientSockets[j], std::to_string(clientSocket).data());
                 }
                 memset(buffer, 0, sizeof(buffer));
-                int n = read(clientSocket, buffer, sizeof(buffer));
-                if (n < 0) {
+                int x = read(clientSocket, buffer, sizeof(buffer));
+                if (x < 0) {
                     perror("Error reading from socket");
                     exit(1);
-                } else if (n == 0) {
+                } else if (x == 0) {
                     std::cout << "Connection closed by the client." << std::endl;
                     break;
                 } else {
@@ -129,11 +136,11 @@ void Server::handleClientCommunication() {
                         }
                     }
                     memset(buffer, 0, sizeof(buffer));
-                    n = read(oClientSocket, buffer, sizeof(buffer));
-                    if (n < 0) {
+                    x = read(oClientSocket, buffer, sizeof(buffer));
+                    if (x < 0) {
                         perror("Error reading from socket");
                         exit(1);
-                    } else if (n == 0) {
+                    } else if (x == 0) {
                         std::cout << "Connection closed by the client." << std::endl;
                         break;
                     } else {
@@ -148,13 +155,6 @@ void Server::handleClientCommunication() {
 
 void Server::sendToClient(int clientSocket, const char* message) {
     send(clientSocket, message, strlen(message), 0);
-}
-
-void Server::notifyClientsReady() {
-    std::unique_lock<std::mutex> lock(mutex);
-    clientsReady = true;
-    lock.unlock();
-    bothConnected.notify_all();
 }
 
 const char* Server::charToString(char character) {

@@ -4,7 +4,6 @@
 #include <fcntl.h>
 #include <sys/time.h>
 #include <iostream>
-#include <cstring>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -19,9 +18,6 @@ class Client {
 public:
     Client(Board board, int port);
     ~Client();
-
-    void setSocketNonBlocking(int sockfd);
-    int nonBlockingRead(int sockfd, char *buffer, size_t size, int timeout_sec);
 
     void playGame();
     void setOpponentsBoard(Board pOpponentsBoard){opponentsBoard = pOpponentsBoard;};
@@ -60,8 +56,6 @@ private:
     }
 
     void sendCoordsToServer(std::string coords);
-
-    const char * trimWhitespace(char *buffer);
 
     void load();
 

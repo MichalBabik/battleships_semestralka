@@ -50,7 +50,7 @@ Client::~Client() {
 
 void Client::sendCoordsToServer(std::string coords) {
     send(clientSocket, coords.c_str(), coords.length(), 0);
-    std::cout << "Coords sent to server: " << coords << std::endl;
+    //std::cout << "Coords sent to server: " << coords << std::endl;
 }
 
 void Client::playGame() {
@@ -59,15 +59,20 @@ void Client::playGame() {
     std::cout << "Clients connected, please enter inputs for game initialization!" << std::endl;
     board.setUsername();
 
-    //std::cout << "Game is in progress" << std::endl;
-
     Game game(board);
-    //std::cin.ignore();
+    char buffer[256];
+    sendCoordsToServer(charToString('R'));
+    std::cout << "Waiting for the other player set his ships" << std::endl;
+    int t = read(clientSocket, buffer, sizeof(buffer));;
+    if (t < 0) {
+        error("Error reading from socket");
+    }
+    system("clear");
     while (true) {
-        char buffer[256];
+
         int tSocket = 0;
         memset(buffer, 0, sizeof(buffer));
-        int t = read(clientSocket, buffer, sizeof(buffer));
+        t = read(clientSocket, buffer, sizeof(buffer));
         if (t < 0) {
             error("Error reading from socket");
         } else {
@@ -88,11 +93,11 @@ void Client::playGame() {
                 std::istringstream iss(coords);
                 iss >> x >> y;
                 memset(buffer, 0, sizeof(buffer));
-                int  n = read(clientSocket, buffer, sizeof(buffer));
+                t = read(clientSocket, buffer, sizeof(buffer));
 
                 system("clear");
 
-                if (n < 0) {
+                if (t < 0) {
                     error("Error reading from socket");
                 } else {
                     //std::cout << "Message from server: " << buffer << std::endl;
@@ -104,7 +109,7 @@ void Client::playGame() {
                         std::cout << "Your missile hit water..." << std::endl;
                     } else if (strcmp(buffer, "X") == 0) {
                         std::cout << "You hit enemy battleship" << std::endl;
-                        std::cout << x << y << std::endl;
+                        //std::cout << x << y << std::endl;
                         game.getBoard().setCoordinateInFogOfWar(x, y, 'X');
                     } else {
                         std::cout << "Unexpected message received: " << buffer << std::endl;
@@ -118,9 +123,9 @@ void Client::playGame() {
                 game.getBoard().printBoard();
                 std::cout << "Please wait - opponent turn in progress..." << std::endl;
                 memset(buffer, 0, sizeof(buffer));
-                int n = read(clientSocket, buffer, sizeof(buffer));
+                t = read(clientSocket, buffer, sizeof(buffer));
 
-                if (n < 0) {
+                if (t < 0) {
                     error("Error reading from socket");
                 } else {
                     //std::cout << "Message from server: " << buffer << std::endl;
@@ -155,7 +160,7 @@ void Client::load() {
         std::cout << "Timeout occurred. No data received." << std::endl;
     } else {
         yourSocket = std::stoi(buffer);
-        std::cout << "You are player number: " << buffer << std::endl;
+        //std::cout << "You are player number: " << buffer << std::endl;
     }
 }
 
