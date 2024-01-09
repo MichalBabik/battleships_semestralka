@@ -8,6 +8,7 @@ add_executable(battleships_semestralka_server mainServerClient.cpp
         Battleship.h
         Board.cpp
         Board.h
+        Makefile
         Game.cpp
         Game.h
         Client.cpp
@@ -20,6 +21,7 @@ add_executable(battleships_semestralka_client mainClient.cpp
         Battleship.h
         Board.cpp
         Board.h
+        Makefile
         Game.cpp
         Game.h
         Client.cpp
